@@ -5,6 +5,7 @@ use Test::More;
 use Test::Deep;
 use DDG::Test::Goodie;
 use utf8;
+
 zci answer_type => 'conversions';
 zci is_cached   => 1;
 
@@ -22,18 +23,6 @@ sub make_answer(%){
 			group => 'base',
 			options => {
 				content => 'DDH.conversions.content',
-			}
-		}
-	};
-}
-
-sub make_answer_lang {
-	return {
-		data => {},
-		templates => {
-			group => 'base',
-			options => {
-				content => 'DDH.conversions.content'
 			}
 		}
 	};
@@ -1520,15 +1509,27 @@ ddg_goodie_test(
 	# NATURAL LANGUAGE QUERIES
 	'unit converter' => test_zci(
 		'',
-		structured_answer => make_answer_lang()
+		structured_answer => make_answer_with_base({
+			physical_quantity => 'length',
+		}),
 	),
 	'unit conversion' => test_zci(
 		'',
-		structured_answer => make_answer_lang()
+		structured_answer => make_answer_with_base({
+			physical_quantity => 'length',
+		}),
 	),
 	'online converter' => test_zci(
 		'',
-		structured_answer => make_answer_lang()
+		structured_answer => make_answer_with_base({
+			physical_quantity => 'length',
+		}),
+	),
+	'velocity converter' => test_zci(
+		'',
+		structured_answer => make_answer_with_base({
+			physical_quantity => 'speed',
+		}),
 	),
 	
 	# INTENTIONALLY UNTRIGGERED
@@ -2081,16 +2082,19 @@ ddg_goodie_test(
 
 	# natural language queries
 	'unit converter' => test_zci(
-		'',
-		 structured_answer => make_answer_lang()
+		'', structured_answer => make_answer_with_base({
+			physical_quantity => 'length',
+		}),
 	 ),
 	'unit conversion' => test_zci(
-		'',
-		 structured_answer => make_answer_lang()
+		'', structured_answer => make_answer_with_base({
+			physical_quantity => 'length',
+		}),
 	 ),
 	'online converter' => test_zci(
-		'',
-		 structured_answer => make_answer_lang()
+		'', structured_answer => make_answer_with_base({
+			physical_quantity => 'length',
+		}),
 	 ),
 	# natural language queries containing triggers
 	'volume converter' => test_zci(

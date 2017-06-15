@@ -1,0 +1,100 @@
+---
+triggers:
+  - online converter
+  - online conversion
+base: length
+---
+triggers:
+  - unit converter
+  - unit conversion
+  - units converter
+  - units conversion
+base: length
+---
+triggers:
+  - unit converter
+  - unit conversion
+  - units converter
+  - units conversion
+base: length
+---
+triggers:
+  - length converter
+  - length conversion
+  - length calculator
+base: length
+---
+triggers:
+  - mass conversion
+  - mass converter
+  - mass calculator
+base: mass
+---
+triggers:
+  - angle conversion
+  - angle converter
+  - angle calculator
+base: angle
+---
+triggers:
+  - area conversion
+  - area converter
+  - area calculator
+base: area
+---
+triggers:
+  - digital storage conversion
+  - digital storage converter
+  - digital storage calculator
+base: digital storage
+---
+triggers:
+  - duration conversion
+  - duration converter
+  - duration calculator
+base: duration
+---
+triggers:
+  - energy conversion
+  - energy converter
+  - energy calculator
+base: energy
+---
+triggers:
+  - force conversion
+  - force converter
+  - force calculator
+base: force
+---
+triggers:
+  - power conversion
+  - power converter
+  - power calculator
+base: power
+---
+triggers:
+  - pressure conversion
+  - pressure converter
+  - pressure calculator
+base: pressure
+---
+triggers:
+  - temperature conversion
+  - temperature converter
+  - temperature calculator
+base: temperature
+---
+triggers:
+  - speed conversion
+  - speed converter
+  - speed calculator
+  - velocity conversion
+  - velocity converter
+  - velocity calculator
+base: speed
+---
+triggers:
+  - volume conversion
+  - volume converter
+  - volume calculator
+base: volume

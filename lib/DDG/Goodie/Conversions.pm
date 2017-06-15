@@ -10,13 +10,19 @@ use Math::SigFigs qw/:all/;
 use utf8;
 use YAML::XS 'LoadFile';
 use List::Util qw(any);
+use List::Flatten qw/flat/;
 
 zci answer_type => 'conversions';
 zci is_cached   => 1;
 
 use bignum;
 
+##
+## Handles the normal /with unit/ triggering
+##
+
 my @types = LoadFile(share('triggers.yml'));
+my @lang_trigs_from_file = LoadFile(share('langTriggers.yml'));
 
 my @units = ();
 foreach my $type (@types) {
@@ -27,12 +33,27 @@ foreach my $type (@types) {
 
 # build triggers based on available conversion units:
 my @triggers = map { lc $_ } @units;
+
+##
+## Handles the natural language triggering
+##
+
+my %natlang_hash = ();
+my @natlang_triggers = ();
+
+foreach my $record (@lang_trigs_from_file){
+    push(@natlang_triggers, $record->{'triggers'});
+    $natlang_hash{$record->{'base'}} = $record->{'triggers'};
+}
+
+my @natural_language_triggers = flat @natlang_triggers;
+
+##
+## Declares the triggering scheme
+##
+
 triggers any => @triggers;
-
-my @lang_triggers = share('langTriggers.txt')->slurp(chomp => 1);
-
-triggers any => @lang_triggers;
-my %lang_triggers = map { $_ => 1 } @lang_triggers;
+triggers any => @natural_language_triggers;
 
 # match longest possible key (some keys are sub-keys of other keys):
 my $keys = join '|', map { quotemeta $_ } reverse sort { length($a) <=> length($b) } @units;
@@ -58,25 +79,37 @@ sub magnitude_order {
 }
 my $maximum_input = 10**100;
 
+# checks to see if input is natural language trigger
+sub is_natural_language_trigger {
+    my $input = shift;
+    return any { $_ eq $input } @natural_language_triggers;
+}
+
+# checks the base of the query
+# eg. velocity converter --> speed
+sub get_base_information {
+    my $input = shift;
+    foreach my $key (keys %natlang_hash) {
+        if(exists $natlang_hash{$key}) {
+            my @hash_kv = @{$natlang_hash{$key}};
+            foreach my $value (@hash_kv) {
+                if($input eq $value) {
+                    return $key;
+                }
+            }
+        }
+    }
+    return 'length';
+}
+
 handle query => sub {
 
     # for natural language queries, settle with default template / data
-    if (exists($lang_triggers{$_}) && $_=~ m/(angle|area|(?:digital storage)|duration|energy|force|mass|power|pressure|speed|temperature|volume)/) {
+    if (is_natural_language_trigger($_)) {
         return '', structured_answer => {
             data => {
-                physical_quantity => $1
+                physical_quantity => get_base_information($_)
             },
-            templates => {
-                group => 'base',
-                options => {
-                    content => 'DDH.conversions.content'
-                }
-            }
-        };
-    }
-    elsif(exists($lang_triggers{$_})) {
-        return '', structured_answer => {
-            data => {},
             templates => {
                 group => 'base',
                 options => {
